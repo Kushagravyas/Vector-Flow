@@ -1,5 +1,3 @@
-"use client"
-
 import { memo, useState } from "react"
 import { Handle, Position } from "reactflow"
 import "../../styles/nodes.css"
