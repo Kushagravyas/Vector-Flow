@@ -1,10 +1,10 @@
-/* Main entry point for all styles */
+
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
 @import "./themes.css";
 @import "./App.css";
 @import "./nodes.css";
 
-/* Global Reset and Base Styles */
+
 *,
 *::before,
 *::after {
@@ -30,7 +30,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Selection Styles */
+
 ::selection {
   background: rgba(102, 126, 234, 0.3);
   color: #1f2937;
@@ -41,13 +41,13 @@ body {
   color: #1f2937;
 }
 
-/* Focus Styles */
+
 :focus-visible {
   outline: 2px solid #667eea;
   outline-offset: 2px;
 }
 
-/* Image Optimization */
+
 img {
   max-width: 100%;
   height: auto;
@@ -86,7 +86,7 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Utility Classes */
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -130,7 +130,7 @@ a:hover {
   font-weight: 500;
 }
 
-/* Spacing Utilities */
+
 .mt-1 {
   margin-top: 0.25rem;
 }
@@ -228,7 +228,7 @@ a:hover {
   gap: 1.5rem;
 }
 
-/* Grid Utilities */
+
 .grid {
   display: grid;
 }

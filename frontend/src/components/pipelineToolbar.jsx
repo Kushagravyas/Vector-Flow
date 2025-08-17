@@ -1,4 +1,4 @@
-// components/PipelineToolbar.jsx
+
 export default function PipelineToolbar({ onExecute, onReset, onDelete, canDelete }) {
   return (
     <div className="pipeline-toolbar">

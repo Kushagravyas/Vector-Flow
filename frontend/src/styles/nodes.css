@@ -1,10 +1,8 @@
-/* ===========================
-   Global Node Styles
-   =========================== */
+
 .node-base {
   padding: 14px 16px;
   border-radius: 12px;
-  background: #1e1e2f; /* dark card background */
+  background: #1e1e2f;
   border: 1.5px solid #2d2d3f;
   min-width: 160px;
   max-width: 220px;
@@ -23,7 +21,7 @@
   border-color: #3f3f52;
 }
 
-/* subtle top accent line */
+
 .node-base::before {
   content: "";
   position: absolute;
@@ -34,9 +32,7 @@
   border-radius: 12px 12px 0 0;
 }
 
-/* ===========================
-   Node Specific Colors
-   =========================== */
+
 .node-input::before { background: #4ade80; }   /* green */
 .node-text::before { background: #60a5fa; }   /* blue */
 .node-llm::before { background: #a78bfa; }    /* purple */
@@ -46,9 +42,7 @@
 .node-math::before { background: #fb923c; }   /* orange */
 .node-webhook::before { background: #38bdf8; }/* sky blue */
 
-/* ===========================
-   Headers & Content
-   =========================== */
+
 .node-header {
   display: flex;
   align-items: center;
@@ -76,9 +70,7 @@
   gap: 8px;
 }
 
-/* ===========================
-   Inputs, Selects & Textareas
-   =========================== */
+
 .node-input-field,
 .node-select {
   width: 100%;
@@ -111,9 +103,6 @@
   line-height: 1.4;
 }
 
-/* ===========================
-   Handles
-   =========================== */
 .node-handle {
   width: 10px !important;
   height: 10px !important;
@@ -128,9 +117,7 @@
   background: #818cf8 !important;
 }
 
-/* ===========================
-   Responsive
-   =========================== */
+
 @media (max-width: 768px) {
   .node-base {
     min-width: 140px;
