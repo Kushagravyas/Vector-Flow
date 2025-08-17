@@ -6,7 +6,7 @@ import time
 
 app = FastAPI()
 
-# Enable frontend <-> backend communication
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -15,7 +15,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Data models
 class Node(BaseModel):
     id: str
     type: str
@@ -38,7 +37,6 @@ async def parse_pipeline(pipeline: Pipeline):
     nodes = pipeline.nodes
     edges = pipeline.edges
 
-    # --- Pipeline stats ---
     num_nodes = len(nodes)
     num_edges = len(edges)
 
@@ -77,7 +75,7 @@ async def parse_pipeline(pipeline: Pipeline):
             results[node.id] = f"Output collected: {node.data.get('label','result')}"
         elif node.type == "delay":
             delay_time = int(node.data.get("seconds", 1))
-            time.sleep(min(delay_time, 2))  # cap to 2 sec
+            time.sleep(min(delay_time, 2))  
             results[node.id] = f"Delayed {delay_time} sec"
         elif node.type == "concat":
             part1 = node.data.get("part1", "A")
@@ -86,7 +84,7 @@ async def parse_pipeline(pipeline: Pipeline):
         elif node.type == "math":
             try:
                 expr = node.data.get("expression", "1+1")
-                results[node.id] = str(eval(expr))  # simple eval
+                results[node.id] = str(eval(expr)) 
             except Exception:
                 results[node.id] = "Math error"
         elif node.type == "webhook":
