@@ -206,7 +206,7 @@ export default function App() {
       <div className="app-container">
         <div className="sidebar left-sidebar">
           <div className="sidebar-header">
-            <h1 className="sidebar-title">Flow Forge</h1>
+            <h1 className="sidebar-title">Vector Flow</h1>
             <p className="sidebar-subtitle">Drag & Drop Pipeline Builder</p>
           </div>
 
