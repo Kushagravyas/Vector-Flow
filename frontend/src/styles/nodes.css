@@ -1,0 +1,145 @@
+/* ===========================
+   Global Node Styles
+   =========================== */
+.node-base {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #1e1e2f; /* dark card background */
+  border: 1.5px solid #2d2d3f;
+  min-width: 160px;
+  max-width: 220px;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
+  font-size: 13px;
+  color: #e5e7eb;
+  transition: all 0.2s ease;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* hover effect */
+.node-base:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  border-color: #3f3f52;
+}
+
+/* subtle top accent line */
+.node-base::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  border-radius: 12px 12px 0 0;
+}
+
+/* ===========================
+   Node Specific Colors
+   =========================== */
+.node-input::before { background: #4ade80; }   /* green */
+.node-text::before { background: #60a5fa; }   /* blue */
+.node-llm::before { background: #a78bfa; }    /* purple */
+.node-output::before { background: #facc15; } /* yellow */
+.node-delay::before { background: #f87171; }  /* red */
+.node-concat::before { background: #34d399; } /* teal */
+.node-math::before { background: #fb923c; }   /* orange */
+.node-webhook::before { background: #38bdf8; }/* sky blue */
+
+/* ===========================
+   Headers & Content
+   =========================== */
+.node-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #f9fafb;
+}
+
+.node-icon {
+  font-size: 16px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.node-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ===========================
+   Inputs, Selects & Textareas
+   =========================== */
+.node-input-field,
+.node-select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #374151;
+  background: #111827;
+  color: #e5e7eb;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.node-input-field:focus,
+.node-select:focus {
+  border-color: #6366f1;
+  outline: none;
+  background: #1f2937;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+}
+
+.node-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #9ca3af;
+}
+
+.node-description {
+  font-size: 12px;
+  color: #9ca3af;
+  line-height: 1.4;
+}
+
+/* ===========================
+   Handles
+   =========================== */
+.node-handle {
+  width: 10px !important;
+  height: 10px !important;
+  border: 2px solid #1e1e2f !important;
+  background: #6366f1 !important;
+  border-radius: 50%;
+  transition: all 0.2s ease !important;
+}
+
+.node-handle:hover {
+  transform: scale(1.2) !important;
+  background: #818cf8 !important;
+}
+
+/* ===========================
+   Responsive
+   =========================== */
+@media (max-width: 768px) {
+  .node-base {
+    min-width: 140px;
+    padding: 12px;
+    font-size: 12px;
+  }
+
+  .node-header {
+    font-size: 13px;
+  }
+}
+
