@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import ReactFlow, {
   addEdge,
   Background,
@@ -44,10 +44,21 @@ export default function App() {
     return saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches)
   })
 
+  // Mobile responsiveness
+  const [isMobile, setIsMobile] = useState(false)
+  const canvasRef = useRef(null)
+
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", isDarkMode ? "dark" : "light")
     localStorage.setItem("theme", isDarkMode ? "dark" : "light")
   }, [isDarkMode])
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 900)
+    handleResize()
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
 
   const onConnect = (params) => setEdges((eds) => addEdge(params, eds))
 
@@ -67,10 +78,11 @@ export default function App() {
     const type = event.dataTransfer.getData("application/reactflow")
     if (!type) return
 
-    const position = reactFlowInstance.project({
-      x: event.clientX - 280,
-      y: event.clientY - 40,
-    })
+    const bounds = canvasRef.current?.getBoundingClientRect()
+    const posX = bounds ? event.clientX - bounds.left : event.clientX - 280
+    const posY = bounds ? event.clientY - bounds.top : event.clientY - 40
+
+    const position = reactFlowInstance.project({ x: posX, y: posY })
 
     const newNode = {
       id: `${type}_${+new Date()}`,
@@ -197,23 +209,38 @@ export default function App() {
         position="top-right"
         toastOptions={{
           duration: 3000,
-          style: {
-            borderRadius: "12px",
-            fontWeight: "600",
-          },
+          style: { borderRadius: "12px", fontWeight: "600" },
         }}
       />
-      <div className="app-container">
-        <div className="sidebar left-sidebar">
+      <div
+        className="app-container"
+        style={{
+          display: "flex",
+          flexDirection: isMobile ? "column" : "row",
+          height: "100vh",
+          width: "100vw",
+          overflow: "hidden",
+        }}
+      >
+        {/* Left Sidebar */}
+        <div
+          className="sidebar left-sidebar"
+          style={{
+            width: isMobile ? "100%" : 280,
+            flex: "0 0 auto",
+            maxHeight: isMobile ? "32vh" : "none",
+            overflowY: "auto",
+            borderRight: isMobile ? "none" : "1px solid var(--border-color, #ddd)",
+            borderBottom: isMobile ? "1px solid var(--border-color, #ddd)" : "none",
+          }}
+        >
           <div className="sidebar-header">
             <h1 className="sidebar-title">Vector Flow</h1>
             <p className="sidebar-subtitle">Drag & Drop Pipeline Builder</p>
           </div>
-
           <div className="nodes-section">
             <h3 className="section-title">
-              <span>🎯</span>
-              Available Nodes
+              <span>🎯</span> Available Nodes
             </h3>
             <div className="nodes-grid">
               {nodeConfigs.map(({ type, label, icon, className }) => (
@@ -231,7 +258,8 @@ export default function App() {
           </div>
         </div>
 
-        <div className="canvas-container" onDrop={onDrop} onDragOver={onDragOver}>
+        {/* Canvas */}
+        <div ref={canvasRef} className="canvas-container" onDrop={onDrop} onDragOver={onDragOver} style={{ flex: 1 }}>
           <ReactFlow
             nodes={nodes.map((node) => ({
               ...node,
@@ -256,74 +284,87 @@ export default function App() {
               type: "smoothstep",
             }}
           >
-            <MiniMap
-              nodeStrokeColor="var(--accent-color)"
-              nodeColor="var(--node-bg)"
-              nodeBorderRadius={8}
-              className="react-flow__minimap-dark"
-            />
+            <MiniMap nodeStrokeColor="var(--accent-color)" nodeColor="var(--node-bg)" nodeBorderRadius={8} />
             <Background variant="dots" gap={20} size={1} color="var(--grid-color)" />
-            <Controls className="react-flow__controls-dark" />
+            <Controls />
           </ReactFlow>
         </div>
 
-        <div className="sidebar right-sidebar">
-          <div className="sidebar-header">
-            <h3 className="sidebar-title">Actions</h3>
-            <p className="sidebar-subtitle">Pipeline Controls</p>
-          </div>
-
-          <div className="actions-section">
-            <button onClick={submitPipeline} className="action-button btn-execute" title="Execute Pipeline">
-              <span className="action-icon">🚀</span>
-              <span className="action-text">Execute</span>
-            </button>
-
-            <button onClick={handleRefresh} className="action-button btn-refresh" title="Refresh Canvas">
-              <span className="action-icon">🔄</span>
-              <span className="action-text">Refresh</span>
-            </button>
-
-            <button
-              onClick={handleDeleteSelected}
-              disabled={!selectedNodeId}
-              className="action-button btn-delete"
-              title="Delete Selected Node"
-            >
-              <span className="action-icon">🗑️</span>
-              <span className="action-text">Delete</span>
-            </button>
-          </div>
-
-          <div className="theme-section">
-            <h4 className="section-subtitle">Theme</h4>
-            <button
-              onClick={toggleTheme}
-              className="theme-toggle"
-              title={`Switch to ${isDarkMode ? "light" : "dark"} mode`}
-            >
-              <span className="theme-icon">{isDarkMode ? "☀️" : "🌙"}</span>
-              <span className="theme-text">{isDarkMode ? "Light" : "Dark"}</span>
-            </button>
-          </div>
-
-          <div className="status-section">
-            <div className="status-item">
-              <span className="status-label">Nodes:</span>
-              <span className="status-value">{nodes.length}</span>
+        {/* Desktop Right Sidebar */}
+        {!isMobile && (
+          <div className="sidebar right-sidebar" style={{ width: 260 }}>
+            <div className="sidebar-header">
+              <h3 className="sidebar-title">Actions</h3>
+              <p className="sidebar-subtitle">Pipeline Controls</p>
             </div>
-            <div className="status-item">
-              <span className="status-label">Edges:</span>
-              <span className="status-value">{edges.length}</span>
+            <div className="actions-section">
+              <button onClick={submitPipeline} className="action-button btn-execute" title="Execute Pipeline">
+                <span className="action-icon">🚀</span>
+                <span className="action-text">Execute</span>
+              </button>
+              <button onClick={handleRefresh} className="action-button btn-refresh" title="Refresh Canvas">
+                <span className="action-icon">🔄</span>
+                <span className="action-text">Refresh</span>
+              </button>
+              <button
+                onClick={handleDeleteSelected}
+                disabled={!selectedNodeId}
+                className="action-button btn-delete"
+                title="Delete Selected Node"
+              >
+                <span className="action-icon">🗑️</span>
+                <span className="action-text">Delete</span>
+              </button>
             </div>
-            {selectedNodeId && (
-              <div className="status-item selected">
-                <span className="status-label">Selected:</span>
-                <span className="status-value">{selectedNodeId.split("_")[0]}</span>
+            <div className="theme-section">
+              <h4 className="section-subtitle">Theme</h4>
+              <button onClick={toggleTheme} className="theme-toggle">
+                <span className="theme-icon">{isDarkMode ? "☀️" : "🌙"}</span>
+                <span className="theme-text">{isDarkMode ? "Light" : "Dark"}</span>
+              </button>
+            </div>
+            <div className="status-section">
+              <div className="status-item">
+                <span className="status-label">Nodes:</span>
+                <span className="status-value">{nodes.length}</span>
               </div>
-            )}
+              <div className="status-item">
+                <span className="status-label">Edges:</span>
+                <span className="status-value">{edges.length}</span>
+              </div>
+              {selectedNodeId && (
+                <div className="status-item selected">
+                  <span className="status-label">Selected:</span>
+                  <span className="status-value">{selectedNodeId.split("_")[0]}</span>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Mobile Bottom Toolbar */}
+        {isMobile && (
+          <div
+            className="mobile-toolbar"
+            style={{
+              position: "fixed",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              background: "var(--sidebar-bg)",
+              borderTop: "1px solid var(--border-color)",
+              display: "flex",
+              justifyContent: "space-around",
+              padding: "8px 0",
+              zIndex: 20,
+            }}
+          >
+            <button onClick={submitPipeline} title="Execute Pipeline">🚀</button>
+            <button onClick={handleRefresh} title="Refresh Canvas">🔄</button>
+            <button onClick={handleDeleteSelected} disabled={!selectedNodeId} title="Delete Node">🗑️</button>
+            <button onClick={toggleTheme} title="Toggle Theme">{isDarkMode ? "☀️" : "🌙"}</button>
+          </div>
+        )}
       </div>
     </ReactFlowProvider>
   )
